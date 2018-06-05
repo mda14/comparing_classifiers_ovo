@@ -1,4 +1,4 @@
-# Python script to compare classification algorithms for OVO
+# Python script to compare classification algorithms
 
 from matplotlib.colors import Normalize
 # create colour normalizing function for heatmap to be used in GridSearch
@@ -95,8 +95,37 @@ def my_optimal_KNN(features, y_features):
       % (grid.best_params_, grid.best_score_))
 
     # plot accuracy of classifier for each neighbours_range
-
+    scores = grid.cv_results_['mean_test_score']
+    plt.plot(neighbours_range, scores)
+    plt.xlabel('number of neighbours')
+    plt.ylabel('validation accuracy')
+    plt.show()
+    
     return grid.best_params_
 
 def my_optimal_FOREST(features, y_features):
   # function to obtain optimal hyper-parameters using gridSearch for Random Forest ensemble
+  max_depth_range = [1,10,20,30,40,50,60,70,80,90,100]
+  n_estimators = [1,5,10,15,20,25,30,35,40,45,50]
+  param_grid = dict(max_depth_range = max_depth_range, n_estimators = n_estimators)
+  cv = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+  clf_forest = RandomForestClassifier()
+  grid = GridSearchCV(clf_forest, param_grid = param_grid, cv=cv)
+  grid.fit(features, y_features)
+  print("The best parameters are %s with a score of %0.2f"
+    % (grid.best_params_, grid.best_score_))
+
+    scores = grid.cv_results_['mean_test_score'].reshape(len(max_depth_range),
+                                                     len(n_estimators))
+    # Plotting heatmap
+    plt.xlabel('number of estimators')
+    plt.ylabel('maximum depth range')
+    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    plt.colorbar()
+    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    plt.yticks(np.arange(len(C_range)), C_range)
+    plt.title('Validation accuracy')
+    plt.show()
+
+    return grid.best_params_
