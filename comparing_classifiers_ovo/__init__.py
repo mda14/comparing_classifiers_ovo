@@ -1,4 +1,14 @@
 # Python script to compare classification algorithms
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import GridSearchCV
+
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 from matplotlib.colors import Normalize
 # create colour normalizing function for heatmap to be used in GridSearch
