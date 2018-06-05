@@ -30,7 +30,7 @@ def classifier_comparison(features, y_features):
 
 def my_optimal_SVM_ovo(features, y_features):
     # function to obtain optimal hyper-parameters using gridSearch for RBF SVM
-    clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape=’ovo’)
+    clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape='ovo')
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
@@ -57,7 +57,7 @@ def my_optimal_SVM_ovo(features, y_features):
 
 def my_optimal_SVM_ovr(features, y_features):
     # function to obtain optimal hyper-parameters using gridSearch for RBF SVM
-    clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape=’ovr’)
+    clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape='ovr')
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
@@ -100,7 +100,7 @@ def my_optimal_KNN(features, y_features):
     plt.xlabel('number of neighbours')
     plt.ylabel('validation accuracy')
     plt.show()
-    
+
     return grid.best_params_
 
 def my_optimal_FOREST(features, y_features):
