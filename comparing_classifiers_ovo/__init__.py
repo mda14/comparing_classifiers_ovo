@@ -112,20 +112,17 @@ def my_optimal_FOREST(features, y_features):
   clf_forest = RandomForestClassifier()
   grid = GridSearchCV(clf_forest, param_grid = param_grid, cv=cv)
   grid.fit(features, y_features)
-  print("The best parameters are %s with a score of %0.2f"
-    % (grid.best_params_, grid.best_score_))
+  print("The best parameters are %s with a score of %0.2f" % (grid.best_params_, grid.best_score_))
 
-    scores = grid.cv_results_['mean_test_score'].reshape(len(max_depth_range),
-                                                     len(n_estimators))
-    # Plotting heatmap
-    plt.xlabel('number of estimators')
-    plt.ylabel('maximum depth range')
-    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
-           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-    plt.colorbar()
-    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-    plt.yticks(np.arange(len(C_range)), C_range)
-    plt.title('Validation accuracy')
-    plt.show()
+  scores = grid.cv_results_['mean_test_score'].reshape(len(max_depth_range),len(n_estimators))
+  # Plotting heatmap
+  plt.xlabel('number of estimators')
+  plt.ylabel('maximum depth range')
+  plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+  plt.colorbar()
+  plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+  plt.yticks(np.arange(len(C_range)), C_range)
+  plt.title('Validation accuracy')
+  plt.show()
 
-    return grid.best_params_
+  return grid.best_params_
