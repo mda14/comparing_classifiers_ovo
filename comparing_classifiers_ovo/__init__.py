@@ -18,7 +18,8 @@ def classifier_comparison(features, y_features):
   X_train, X_test, y_train, y_test = train_test_split(features, y_features, random_state = 0)
 
   # run all optimising functions to find optimal parameters
-  opitmal_SVM = my_optimal_SVM(features, y_features)
+  opitmal_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
+  opitmal_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
   optimal_KNN = my_optimal_KNN(features, y_features)
   optimal_FOREST = my_optimal_FOREST(features, y_features)
 
@@ -27,9 +28,36 @@ def classifier_comparison(features, y_features):
   # - table with classifier name, specificity, sensitivity, accuracy
 
 
-def my_optimal_SVM(features, y_features):
+def my_optimal_SVM_ovo(features, y_features):
     # function to obtain optimal hyper-parameters using gridSearch for RBF SVM
     clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape=’ovo’)
+    C_range = np.logspace(-2, 10, 13)
+    gamma_range = np.logspace(-9, 3, 13)
+    param_grid = dict(gamma=gamma_range, C=C_range)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    grid = GridSearchCV(clf_rbf, param_grid=param_grid, cv=cv)
+    grid.fit(features, y_features)
+    print("The best parameters are %s with a score of %0.2f"
+      % (grid.best_params_, grid.best_score_))
+    scores = grid.cv_results_['mean_test_score'].reshape(len(C_range),
+                                                     len(gamma_range))
+    # Plotting heatmap
+    plt.xlabel('gamma')
+    plt.ylabel('C')
+    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    plt.colorbar()
+    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    plt.yticks(np.arange(len(C_range)), C_range)
+    plt.title('Validation accuracy')
+    plt.show()
+
+    return grid.best_params_
+
+
+def my_optimal_SVM_ovr(features, y_features):
+    # function to obtain optimal hyper-parameters using gridSearch for RBF SVM
+    clf_rbf = svm.SVC(kernel ='rbf', decision_function_shape=’ovr’)
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
