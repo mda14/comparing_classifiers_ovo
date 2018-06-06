@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
@@ -26,17 +27,24 @@ class MidpointNormalize(Normalize):
 
 def classifier_comparison(features, y_features):
   #split data into train and test
-  X_train, X_test, y_train, y_test = train_test_split(features, y_features, random_state = 0)
+  #X_train, X_test, y_train, y_test = train_test_split(features, y_features, random_state = 0)
 
   # run all optimising functions to find optimal parameters
-  opitmal_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
-  opitmal_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
+  optimal_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
+  optimal_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
   optimal_KNN = my_optimal_KNN(features, y_features)
   optimal_FOREST = my_optimal_FOREST(features, y_features)
 
-  # using optimal parameters output
+  class_names = ['Lying down','Sitting','Standing','Moving']
+  scoring = ['accuracy','precision_macro', 'recall_macro']
+  # using optimal parameters and cross-validation output
   # - confusion matrix for each classifier
   # - table with classifier name, specificity, sensitivity, accuracy
+  clf_rbf_optimal_ovo = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovo', optimal_SVM_ovo)
+  scores_rbf_ovo = cross_validate(clf_rbf_optimal_ovo, features, y_features, scoring=scoring, cv=10, return_train_score=False)
+
+  clf_rbf_optimal_ovr = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovr', optimal_SVM_ovr)
+  scores_rbf_ovr = cross_validate(clf_rbf_optimal_ovr, features, y_features, scoring=scoring, cv=10, return_train_score=False)
 
 
 def my_optimal_SVM_ovo(features, y_features):
@@ -45,7 +53,7 @@ def my_optimal_SVM_ovo(features, y_features):
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.25, random_state=0)
     grid = GridSearchCV(clf_rbf, param_grid=param_grid, cv=cv)
     grid.fit(features, y_features)
     print("The best parameters are %s with a score of %0.2f"
@@ -72,7 +80,7 @@ def my_optimal_SVM_ovr(features, y_features):
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.25, random_state=0)
     grid = GridSearchCV(clf_rbf, param_grid=param_grid, cv=cv)
     grid.fit(features, y_features)
     print("The best parameters are %s with a score of %0.2f"
