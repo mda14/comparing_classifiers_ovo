@@ -2,12 +2,13 @@
 from cm_visualisation import cm_analysis
 
 import numpy as np
+import pandas
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_predict
 
 from sklearn import svm
 from sklearn.svm import SVC
@@ -32,26 +33,28 @@ def classifier_comparison(features, y_features):
   #X_train, X_test, y_train, y_test = train_test_split(features, y_features, random_state = 0)
 
   # run all optimising functions to find optimal parameters
-  optimal_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
-  optimal_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
-  optimal_KNN = my_optimal_KNN(features, y_features)
-  optimal_FOREST = my_optimal_FOREST(features, y_features)
+  optimal_SVM_ovo, score_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
+  optimal_SVM_ovr, score_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
+  optimal_KNN, score_KNN = my_optimal_KNN(features, y_features)
+  optimal_FOREST, score_FOREST = my_optimal_FOREST(features, y_features)
 
   class_names = ['Lying down','Sitting','Standing','Moving']
-  scoring = ['accuracy','precision_macro', 'recall_macro']
-  # using optimal parameters and cross-validation output
-  # - confusion matrix for each classifier
+  #scoring = ['accuracy','precision_macro', 'recall_macro']
   # - table with classifier name, specificity, sensitivity, accuracy
 
-  
-  # clf_rbf_optimal_ovo = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovo', optimal_SVM_ovo)
-  # scores_rbf_ovo = cross_validate(clf_rbf_optimal_ovo, features, y_features, scoring=scoring, cv=10, return_train_score=False)
-  #
-  # clf_rbf_optimal_ovr = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovr', optimal_SVM_ovr)
-  # scores_rbf_ovr = cross_validate(clf_rbf_optimal_ovr, features, y_features, scoring=scoring, cv=10, return_train_score=False)
-  #
-  # cm_analysis(y_features, y_pred, filename, class_names, ymap=None, figsize=(10,10))
+  y_pred_rbf_ovo = cross_val_predict(optimal_SVM_ovo, features, y_features)
+  cm_analysis(y_features, y_pred_rbf_ovo, 'rbf_ovo', class_names, ymap=None, figsize=(10,10))
+  y_pred_rbf_ovr = cross_val_predict(optimal_SVM_ovr, features, y_features)
+  cm_analysis(y_features, y_pred_rbf_ovr, 'rbf_ovr', class_names, ymap=None, figsize=(10,10))
+  y_pred_knn = cross_val_predict(optimal_KNN, features, y_features)
+  cm_analysis(y_features, y_pred_knn, 'knn', class_names, ymap=None, figsize=(10,10))
+  y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
+  cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
 
+  d = {'Classifier': ['SVM_ovo', 'SVM_ovr', 'K-Nearest Neighbours', 'Random Forest'],
+                        'test score': [score_SVM_ovo, score_SVM_ovr, score_KNN, score_FOREST]}
+  results = pd.DataFrame(data = d)
+  return results;
 
 def my_optimal_SVM_ovo(features, y_features):
     # function to obtain optimal hyper-parameters using gridSearch for RBF SVM
@@ -77,7 +80,7 @@ def my_optimal_SVM_ovo(features, y_features):
     plt.title('Validation accuracy')
     plt.show()
 
-    return grid.best_params_
+    return grid.best_estimator_, grid.best_score_
 
 
 def my_optimal_SVM_ovr(features, y_features):
@@ -104,7 +107,7 @@ def my_optimal_SVM_ovr(features, y_features):
     plt.title('Validation accuracy')
     plt.show()
 
-    return grid.best_params_
+    return grid.best_estimator_, grid.best_score_
 
 
 def my_optimal_KNN(features, y_features):
@@ -126,7 +129,7 @@ def my_optimal_KNN(features, y_features):
     plt.ylabel('validation accuracy')
     plt.show()
 
-    return grid.best_params_
+    return grid.best_estimator_, grid.best_score_
 
 def my_optimal_FOREST(features, y_features):
   # function to obtain optimal hyper-parameters using gridSearch for Random Forest ensemble
@@ -150,4 +153,4 @@ def my_optimal_FOREST(features, y_features):
   plt.title('Validation accuracy')
   plt.show()
 
-  return grid.best_params_
+  return grid.best_estimator_, grid.best_score_
