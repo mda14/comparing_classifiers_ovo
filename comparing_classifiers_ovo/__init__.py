@@ -62,7 +62,7 @@ def my_optimal_SVM_ovo(features, y_features):
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.25, random_state=0)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.25, random_state=0)
     grid = GridSearchCV(clf_rbf, param_grid=param_grid, cv=cv)
     grid.fit(features, y_features)
     print("The best parameters are %s with a score of %0.2f"
@@ -70,15 +70,15 @@ def my_optimal_SVM_ovo(features, y_features):
     scores = grid.cv_results_['mean_test_score'].reshape(len(C_range),
                                                      len(gamma_range))
     # Plotting heatmap
-    plt.xlabel('gamma')
-    plt.ylabel('C')
-    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
-           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-    plt.colorbar()
-    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-    plt.yticks(np.arange(len(C_range)), C_range)
-    plt.title('Validation accuracy')
-    plt.show()
+    # plt.xlabel('gamma')
+    # plt.ylabel('C')
+    # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+    #        norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    # plt.colorbar()
+    # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    # plt.yticks(np.arange(len(C_range)), C_range)
+    # plt.title('Validation accuracy')
+    # plt.show()
 
     return grid.best_estimator_, grid.best_score_
 
@@ -89,7 +89,7 @@ def my_optimal_SVM_ovr(features, y_features):
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.25, random_state=0)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.25, random_state=0)
     grid = GridSearchCV(clf_rbf, param_grid=param_grid, cv=cv)
     grid.fit(features, y_features)
     print("The best parameters are %s with a score of %0.2f"
@@ -97,24 +97,25 @@ def my_optimal_SVM_ovr(features, y_features):
     scores = grid.cv_results_['mean_test_score'].reshape(len(C_range),
                                                      len(gamma_range))
     # Plotting heatmap
-    plt.xlabel('gamma')
-    plt.ylabel('C')
-    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
-           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-    plt.colorbar()
-    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-    plt.yticks(np.arange(len(C_range)), C_range)
-    plt.title('Validation accuracy')
-    plt.show()
+    # plt.xlabel('gamma')
+    # plt.ylabel('C')
+    # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+    #        norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    # plt.colorbar()
+    # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    # plt.yticks(np.arange(len(C_range)), C_range)
+    # plt.title('Validation accuracy')
+    # plt.show()
 
     return grid.best_estimator_, grid.best_score_
 
 
 def my_optimal_KNN(features, y_features):
     # function to obtain optimal number of neighbours for NN algorithm
-    neighbours_range = [1, 10, 20, 30, 40, 50, 60 ,70 ,80, 90, 100, 500, 1000]
+    #neighbours_range = [1, 10, 20, 30, 40, 50, 60 ,70 ,80, 90, 100, 500, 1000]
+    neighbours_range = [1,5,10,50]
     param_grid = dict(n_neighbors = neighbours_range)
-    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
     neigh = KNeighborsClassifier()
     grid = GridSearchCV(neigh, param_grid=param_grid, cv=cv)
     grid.fit(features, y_features)
@@ -133,10 +134,12 @@ def my_optimal_KNN(features, y_features):
 
 def my_optimal_FOREST(features, y_features):
   # function to obtain optimal hyper-parameters using gridSearch for Random Forest ensemble
-  max_depth_range = [1,10,20,30,40,50,60,70,80,90,100]
-  n_estimators = [1,5,10,15,20,25,30,35,40,45,50]
+  #max_depth_range = [1,10,20,30,40,50,60,70,80,90,100]
+  max_depth_range = [1,20,100]
+  #n_estimators = [1,5,10,15,20,25,30,35,40,45,50]
+  n_estimators = [1,10,20]
   param_grid = dict(max_depth_range = max_depth_range, n_estimators = n_estimators)
-  cv = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+  cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
   clf_forest = RandomForestClassifier()
   grid = GridSearchCV(clf_forest, param_grid = param_grid, cv=cv)
   grid.fit(features, y_features)
@@ -144,13 +147,13 @@ def my_optimal_FOREST(features, y_features):
 
   scores = grid.cv_results_['mean_test_score'].reshape(len(max_depth_range),len(n_estimators))
   # Plotting heatmap
-  plt.xlabel('number of estimators')
-  plt.ylabel('maximum depth range')
-  plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-  plt.colorbar()
-  plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-  plt.yticks(np.arange(len(C_range)), C_range)
-  plt.title('Validation accuracy')
-  plt.show()
+  # plt.xlabel('number of estimators')
+  # plt.ylabel('maximum depth range')
+  # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+  # plt.colorbar()
+  # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+  # plt.yticks(np.arange(len(C_range)), C_range)
+  # plt.title('Validation accuracy')
+  # plt.show()
 
   return grid.best_estimator_, grid.best_score_
