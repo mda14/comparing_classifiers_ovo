@@ -1,4 +1,6 @@
 # Python script to compare classification algorithms
+from cm_visualisation import cm_analysis
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -40,11 +42,15 @@ def classifier_comparison(features, y_features):
   # using optimal parameters and cross-validation output
   # - confusion matrix for each classifier
   # - table with classifier name, specificity, sensitivity, accuracy
-  clf_rbf_optimal_ovo = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovo', optimal_SVM_ovo)
-  scores_rbf_ovo = cross_validate(clf_rbf_optimal_ovo, features, y_features, scoring=scoring, cv=10, return_train_score=False)
 
-  clf_rbf_optimal_ovr = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovr', optimal_SVM_ovr)
-  scores_rbf_ovr = cross_validate(clf_rbf_optimal_ovr, features, y_features, scoring=scoring, cv=10, return_train_score=False)
+  
+  # clf_rbf_optimal_ovo = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovo', optimal_SVM_ovo)
+  # scores_rbf_ovo = cross_validate(clf_rbf_optimal_ovo, features, y_features, scoring=scoring, cv=10, return_train_score=False)
+  #
+  # clf_rbf_optimal_ovr = svm.SVC(kernel = 'rbf', decision_function_shape = 'ovr', optimal_SVM_ovr)
+  # scores_rbf_ovr = cross_validate(clf_rbf_optimal_ovr, features, y_features, scoring=scoring, cv=10, return_train_score=False)
+  #
+  # cm_analysis(y_features, y_pred, filename, class_names, ymap=None, figsize=(10,10))
 
 
 def my_optimal_SVM_ovo(features, y_features):
