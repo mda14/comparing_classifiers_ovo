@@ -34,22 +34,29 @@ def classifier_comparison(features, y_features):
 
   # run all optimising functions to find optimal parameters
   optimal_SVM_ovo, score_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
+  y_pred_rbf_ovo = cross_val_predict(optimal_SVM_ovo, features, y_features)
+  cm_analysis(y_features, y_pred_rbf_ovo, 'rbf_ovo', class_names, ymap=None, figsize=(10,10))
+
   optimal_SVM_ovr, score_SVM_ovr = my_optimal_SVM_ovr(features, y_features)
+  y_pred_rbf_ovr = cross_val_predict(optimal_SVM_ovr, features, y_features)
+  cm_analysis(y_features, y_pred_rbf_ovr, 'rbf_ovr', class_names, ymap=None, figsize=(10,10))
+
   optimal_KNN, score_KNN = my_optimal_KNN(features, y_features)
+  y_pred_knn = cross_val_predict(optimal_KNN, features, y_features)
+  cm_analysis(y_features, y_pred_knn, 'knn', class_names, ymap=None, figsize=(10,10))
+
   optimal_FOREST, score_FOREST = my_optimal_FOREST(features, y_features)
+   y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
+   cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
 
   class_names = ['Lying down','Sitting','Standing','Moving']
   #scoring = ['accuracy','precision_macro', 'recall_macro']
   # - table with classifier name, specificity, sensitivity, accuracy
 
-  y_pred_rbf_ovo = cross_val_predict(optimal_SVM_ovo, features, y_features)
-  cm_analysis(y_features, y_pred_rbf_ovo, 'rbf_ovo', class_names, ymap=None, figsize=(10,10))
-  y_pred_rbf_ovr = cross_val_predict(optimal_SVM_ovr, features, y_features)
-  cm_analysis(y_features, y_pred_rbf_ovr, 'rbf_ovr', class_names, ymap=None, figsize=(10,10))
-  y_pred_knn = cross_val_predict(optimal_KNN, features, y_features)
-  cm_analysis(y_features, y_pred_knn, 'knn', class_names, ymap=None, figsize=(10,10))
-  y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
-  cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
+
+
+
+
 
   d = {'Classifier': ['SVM_ovo', 'SVM_ovr', 'K-Nearest Neighbours', 'Random Forest'],
                         'test score': [score_SVM_ovo, score_SVM_ovr, score_KNN, score_FOREST]}
@@ -70,15 +77,15 @@ def my_optimal_SVM_ovo(features, y_features):
     scores = grid.cv_results_['mean_test_score'].reshape(len(C_range),
                                                      len(gamma_range))
     # Plotting heatmap
-    # plt.xlabel('gamma')
-    # plt.ylabel('C')
-    # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
-    #        norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-    # plt.colorbar()
-    # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-    # plt.yticks(np.arange(len(C_range)), C_range)
-    # plt.title('Validation accuracy')
-    # plt.show()
+    plt.xlabel('gamma')
+    plt.ylabel('C')
+    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    plt.colorbar()
+    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    plt.yticks(np.arange(len(C_range)), C_range)
+    plt.title('Validation accuracy')
+    plt.show()
 
     return grid.best_estimator_, grid.best_score_
 
@@ -97,15 +104,15 @@ def my_optimal_SVM_ovr(features, y_features):
     scores = grid.cv_results_['mean_test_score'].reshape(len(C_range),
                                                      len(gamma_range))
     # Plotting heatmap
-    # plt.xlabel('gamma')
-    # plt.ylabel('C')
-    # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
-    #        norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-    # plt.colorbar()
-    # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-    # plt.yticks(np.arange(len(C_range)), C_range)
-    # plt.title('Validation accuracy')
-    # plt.show()
+    plt.xlabel('gamma')
+    plt.ylabel('C')
+    plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot,
+           norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+    plt.colorbar()
+    plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+    plt.yticks(np.arange(len(C_range)), C_range)
+    plt.title('Validation accuracy')
+    plt.show()
 
     return grid.best_estimator_, grid.best_score_
 
@@ -147,13 +154,13 @@ def my_optimal_FOREST(features, y_features):
 
   scores = grid.cv_results_['mean_test_score'].reshape(len(max_depth_range),len(n_estimators))
   # Plotting heatmap
-  # plt.xlabel('number of estimators')
-  # plt.ylabel('maximum depth range')
-  # plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
-  # plt.colorbar()
-  # plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-  # plt.yticks(np.arange(len(C_range)), C_range)
-  # plt.title('Validation accuracy')
-  # plt.show()
+  plt.xlabel('number of estimators')
+  plt.ylabel('maximum depth range')
+  plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
+  plt.colorbar()
+  plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
+  plt.yticks(np.arange(len(C_range)), C_range)
+  plt.title('Validation accuracy')
+  plt.show()
 
   return grid.best_estimator_, grid.best_score_
