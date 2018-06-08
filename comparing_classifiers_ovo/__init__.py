@@ -31,6 +31,7 @@ class MidpointNormalize(Normalize):
 def classifier_comparison(features, y_features):
   #split data into train and test
   #X_train, X_test, y_train, y_test = train_test_split(features, y_features, random_state = 0)
+  class_names = [1,2,3,4]
 
   # run all optimising functions to find optimal parameters
   optimal_SVM_ovo, score_SVM_ovo = my_optimal_SVM_ovo(features, y_features)
@@ -49,7 +50,6 @@ def classifier_comparison(features, y_features):
   y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
   cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
 
-  class_names = ['Lying down','Sitting','Standing','Moving']
   #scoring = ['accuracy','precision_macro', 'recall_macro']
   # - table with classifier name, specificity, sensitivity, accuracy
 
@@ -85,8 +85,9 @@ def my_optimal_SVM_ovo(features, y_features):
     plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
     plt.yticks(np.arange(len(C_range)), C_range)
     plt.title('Validation accuracy')
-    plt.show()
+    plt.savefig('SVM_ovo_heatmap')
 
+    print('optimal SVM_ovo done')
     return grid.best_estimator_, grid.best_score_
 
 
@@ -112,8 +113,9 @@ def my_optimal_SVM_ovr(features, y_features):
     plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
     plt.yticks(np.arange(len(C_range)), C_range)
     plt.title('Validation accuracy')
-    plt.show()
+    plt.savefig('SVM_ovr_heatmap')
 
+    print('optimal SVM_ovr done')
     return grid.best_estimator_, grid.best_score_
 
 
@@ -135,8 +137,9 @@ def my_optimal_KNN(features, y_features):
     plt.plot(neighbours_range, scores)
     plt.xlabel('number of neighbours')
     plt.ylabel('validation accuracy')
-    plt.show()
+    plt.savefig('neighbours_vs_accuracy')
 
+    print('optimal KNN done')
     return grid.best_estimator_, grid.best_score_
 
 def my_optimal_FOREST(features, y_features):
@@ -161,6 +164,7 @@ def my_optimal_FOREST(features, y_features):
   plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
   plt.yticks(np.arange(len(C_range)), C_range)
   plt.title('Validation accuracy')
-  plt.show()
+  plt.savefig('forest_heatmap')
 
+  print('optimal random forest done')
   return grid.best_estimator_, grid.best_score_
