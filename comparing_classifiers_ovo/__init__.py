@@ -46,8 +46,8 @@ def classifier_comparison(features, y_features):
   cm_analysis(y_features, y_pred_knn, 'knn', class_names, ymap=None, figsize=(10,10))
 
   optimal_FOREST, score_FOREST = my_optimal_FOREST(features, y_features)
-   y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
-   cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
+  y_pred_forest = cross_val_predict(optimal_FOREST, features, y_features)
+  cm_analysis(y_features, y_pred_forest, 'forest', class_names, ymap=None, figsize=(10,10))
 
   class_names = ['Lying down','Sitting','Standing','Moving']
   #scoring = ['accuracy','precision_macro', 'recall_macro']
