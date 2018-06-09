@@ -138,7 +138,7 @@ def my_optimal_KNN(features, y_features):
     plt.xlabel('Number of neighbours')
     plt.ylabel('Average test score')
     plt.title('K-Nearest Neighbours optimisation')
-    plt.figure(figsize = (12,12))
+    #plt.figure(figsize = (12,12))
     plt.savefig('neighbours_vs_accuracy',  dpi=280)
 
     print('optimal KNN done')
