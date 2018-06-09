@@ -85,7 +85,7 @@ def my_optimal_SVM_ovo(features, y_features):
     plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
     plt.yticks(np.arange(len(C_range)), C_range)
     plt.title('Validation accuracy')
-    plt.savefig('SVM_ovo_heatmap')
+    plt.savefig('SVM_ovo_heatmap', dpi=280)
 
     print('optimal SVM_ovo done')
     return grid.best_estimator_, grid.best_score_
@@ -113,7 +113,7 @@ def my_optimal_SVM_ovr(features, y_features):
     plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
     plt.yticks(np.arange(len(C_range)), C_range)
     plt.title('Validation accuracy')
-    plt.savefig('SVM_ovr_heatmap')
+    plt.savefig('SVM_ovr_heatmap', dpi=280)
 
     print('optimal SVM_ovr done')
     return grid.best_estimator_, grid.best_score_
@@ -167,7 +167,7 @@ def my_optimal_FOREST(features, y_features):
   plt.xticks(np.arange(len(param_grid['max_depth']), param_grid['max_depth'], rotation=45))
   plt.yticks(np.arange(len(param_grid['n_estimators'])), param_grid['n_estimators'])
   plt.title('Validation accuracy')
-  plt.savefig('forest_heatmap')
+  plt.savefig('forest_heatmap', dpi=280)
 
   print('optimal random forest done')
   return grid.best_estimator_, grid.best_score_
