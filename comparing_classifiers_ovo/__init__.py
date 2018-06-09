@@ -144,8 +144,8 @@ def my_optimal_KNN(features, y_features):
 
 def my_optimal_FOREST(features, y_features):
   # function to obtain optimal hyper-parameters using gridSearch for Random Forest ensemble
-  param_grid = {"max_depth": [3, None, 50, 100],
-                "n_estimators": [1,50,100,500,1000],
+  param_grid = {"max_depth": [3, None, 10, 50],
+                "n_estimators": [1,50,100],
               "max_features": [1, 3, 10],
               "min_samples_split": [2, 3, 10],
               "min_samples_leaf": [1, 3, 10],
@@ -157,7 +157,7 @@ def my_optimal_FOREST(features, y_features):
   grid.fit(features, y_features)
   print("The best parameters are %s with a score of %0.2f" % (grid.best_params_, grid.best_score_))
 
-  scores = grid.cv_results_['mean_test_score'].reshape(len(param_grid.max_depth),len(param_grid.n_estimators))
+  scores = grid.cv_results_['mean_test_score'].reshape(len(param_grid['max_depth']),len(param_grid['n_estimators']))
   # Plotting heatmap
   plt.xlabel('number of estimators')
   plt.ylabel('maximum depth range')
