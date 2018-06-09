@@ -163,8 +163,8 @@ def my_optimal_FOREST(features, y_features):
   plt.ylabel('maximum depth range')
   plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
   plt.colorbar()
-  plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
-  plt.yticks(np.arange(len(C_range)), C_range)
+  plt.xticks(np.arange(len(param_grid['max_depth']), param_grid['max_depth'], rotation=45)
+  plt.yticks(np.arange(len(param_grid['n_estimators'])), param_grid['n_estimators'])
   plt.title('Validation accuracy')
   plt.savefig('forest_heatmap')
 
