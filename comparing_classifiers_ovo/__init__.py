@@ -135,8 +135,9 @@ def my_optimal_KNN(features, y_features):
     # plot accuracy of classifier for each neighbours_range
     scores = grid.cv_results_['mean_test_score']
     plt.plot(neighbours_range, scores)
-    plt.xlabel('number of neighbours')
-    plt.ylabel('validation accuracy')
+    plt.xlabel('Number of neighbours')
+    plt.ylabel('Average test score')
+    plt.title('K-Nearest Neighbours optimisation')
     plt.savefig('neighbours_vs_accuracy')
 
     print('optimal KNN done')
@@ -163,7 +164,7 @@ def my_optimal_FOREST(features, y_features):
   plt.ylabel('maximum depth range')
   plt.imshow(scores, interpolation='nearest', cmap=plt.cm.hot, norm=MidpointNormalize(vmin=0.2, midpoint=0.92))
   plt.colorbar()
-  plt.xticks(np.arange(len(param_grid['max_depth']), param_grid['max_depth'], rotation=45)
+  plt.xticks(np.arange(len(param_grid['max_depth']), param_grid['max_depth'], rotation=45))
   plt.yticks(np.arange(len(param_grid['n_estimators'])), param_grid['n_estimators'])
   plt.title('Validation accuracy')
   plt.savefig('forest_heatmap')
