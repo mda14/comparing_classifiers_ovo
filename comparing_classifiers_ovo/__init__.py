@@ -121,7 +121,7 @@ def my_optimal_SVM_ovr(features, y_features):
 
 def my_optimal_KNN(features, y_features):
     # function to obtain optimal number of neighbours for NN algorithm
-    neighbours_range = [1, 5, 6, 7, 8, 10, 11, 13, 15, 17, 20]
+    neighbours_range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     #neighbours_range = [1,5,10,50]
     param_grid = dict(n_neighbors = neighbours_range)
     cv = StratifiedShuffleSplit(n_splits=3, test_size=0.2, random_state=42)
@@ -138,7 +138,8 @@ def my_optimal_KNN(features, y_features):
     plt.xlabel('Number of neighbours')
     plt.ylabel('Average test score')
     plt.title('K-Nearest Neighbours optimisation')
-    plt.savefig('neighbours_vs_accuracy')
+    plt.figure(figsize = (12,12))
+    plt.savefig('neighbours_vs_accuracy',  dpi=280)
 
     print('optimal KNN done')
     return grid.best_estimator_, grid.best_score_
